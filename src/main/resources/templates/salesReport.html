@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+    <!-- Include Bootstrap CSS link -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .buntan {background-color:rgb(135, 16, 216); color:white;}
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" >
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/images/logo.png}"  src="../static/images/logo.png" width="auto" height="40" class="d-inline-block align-top" alt=""/>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto"></ul>
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/admin}" href="#">Panel</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/logout}" href="#">Logout</a>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <h1 class="text-center">Sales Report</h1>
+    <div class="row">
+        <div class="col-sm-2">
+            <form th:action="@{/admin/salesReport}" method="post" class="mt-3">
+                <div class="form-group">
+                    <!--                <label for="dateFilter">Weekly/Monthly/Yearly:</label>-->
+                    <select id="dateFilter" name="dateFilter" class="form-control">
+                        <option>ALL</option>
+                        <option>DAILY</option>
+                        <option>WEEKLY</option>
+                        <option>MONTHLY</option>
+                        <option>YEARLY</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn buntan btn-block">Filter</button>
+            </form>
+        </div>
+        <div class="col-sm-2">
+        </div>
+        <div class="text-center col-sm-4" style="margin-top:30px;">
+                <h4 th:text="${orderFilter}"></h4>
+                <h4 th:text="'Total orders : ' + ${totalOrders}"></h4>
+                <h4 th:text="'Total sales : ₹' + ${totalSales}"></h4>
+        </div>
+        <div class="text-right col-sm-4" style="margin-top:40px;">
+            <a th:href="@{/generateReport/pdf}" class="btn buntan">Download PDF(All Time)</a>
+            <a th:href="@{/generateReport/xlsx}" class="btn buntan">Download Excel(All Time)</a>
+            <form class="mt-2" th:action="@{/downloadReportDate}" method="post">
+                <div>
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" id="startDate" name="startDate" required>
+                </div>
+
+                <div>
+                    <label for="endDate">End Date:</label>
+                    <input type="date" id="endDate" name="endDate" required>
+                </div>
+
+                <div>
+                    <label for="format">Format:</label>
+                    <select name="format" id="format">
+                        <option value="pdf">PDF</option>
+                        <option value="xlsx">Excel</option>
+                    </select>
+                </div>
+
+                <input type="submit" value="Download Report for Selected Date Range" class="btn buntan">
+            </form>
+        </div>
+
+    </div>
+
+    <table class="table table-striped mt-2">
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Order Date</th>
+            <th>User</th>
+            <th>Total Amount</th>
+            <th>Payment Method</th>
+            <th>Products</th>
+<!--            <th>Delivery Address</th>-->
+            <th>Order Status</th>
+            <th th:if="${DAILY}">Hour</th>
+            <th th:if="${WEEKLY}">Day</th>
+            <th th:if="${MONTHLY}">Day</th>
+            <th th:if="${YEARLY}">Month</th>
+            <th th:if="${ALL}">Month and Year</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterate through the user's orders -->
+        <tr th:each="order : ${userOrders}">
+            <td th:text="${order.id}"></td>
+<!--            <td th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd HH:mm:ss')}"></td>-->
+            <td th:text="${#dates.format(order.orderDate, 'dd-MM-yyyy, hh:mm a')}"></td>
+            <!--            <td th:text="${#dates.format(order.orderDate)}"></td>-->
+            <td th:text="${order.user.getEmail()}"></td>
+            <td th:text="${order.totalPrice}"></td>
+            <td th:text="${order.paymentMethod.method}"></td>
+            <td><ul th:each="orderItem : ${order.orderItems}"><li th:text="${orderItem.product.name} + ' - ' + ${orderItem.quantity} + ' Nos.'"></li></ul></td>
+<!--            <td th:text="${order.address.getFullAddress}"></td>-->
+            <td th:text="${order.orderStatus.status}"></td>
+            <td th:if="${DAILY}">
+                <!-- Link to view order details with Bootstrap button style -->
+<!--                <a th:href="@{/admin/orders/{orderId}(orderId=${order.id})}" class="btn btn-primary">View Details</a>-->
+<!--                <p th:text="${order.orderDate.getYear()} + 1900"></p>-->
+                <p th:text="${#dates.hour(order.orderDate)}"></p>
+            </td>
+            <td th:if="${WEEKLY}">
+                <p th:text="${#dates.dayOfWeekName(order.orderDate)}"></p>
+            </td>
+            <td th:if="${MONTHLY}">
+                <p th:text="${#dates.day(order.orderDate)}"></p>
+            </td>
+            <td th:if="${YEARLY}">
+                <p th:text="${#dates.monthName(order.orderDate)}"></p>
+            </td>
+            <td th:if="${ALL}">
+                <p th:text="${#dates.monthName(order.orderDate)} + ' ' + ${#dates.year(order.orderDate)}"></p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Include Bootstrap JS and jQuery scripts (for Bootstrap functionality) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

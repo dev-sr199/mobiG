@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>mobiG</title>
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" >
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/images/logo.png}"  src="../static/images/logo.png" width="auto" height="40" class="d-inline-block align-top" alt=""/>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto"></ul>
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/}" href="#">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/shop}" href="#">Shop</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/profile}" href="#">Profile</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">Login</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#">Logout</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/cart}" href="#">Cart</a>
+                </li>
+                <li class="nav-item active">
+                    <span class="nav-link" th:text="${cartCount}">0</span>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<main>
+    <div class="container">
+
+        <!--Section: Block Content-->
+        <section class="mt-5 mb-4">
+
+            <!--Grid row-->
+            <div class="row">
+
+                <!--Grid column-->
+                <div class="col-lg-8">
+
+                    <!-- Card -->
+                    <div class="card wish-list mb-4">
+                        <div class="card-body">
+
+                            <h5 class="mb-4">Wishlist (<span th:text="${wishlistCount}"></span> items)</h5>
+
+                            <div class="row mb-4" th:each="item, iStat : ${cart}">
+                                <div class="col-md-5 col-lg-3 col-xl-3">
+                                    <div class="mb-3 mb-md-0">
+                                        <img class="img-fluid"
+                                             th:src="${urlList.get(iStat.index)}"
+                                             style="object-fit: contain; height: 150px; width: 150px"
+                                        >
+
+                                    </div>
+                                </div>
+                                <div class="col-md-7 col-lg-9 col-xl-9">
+                                    <div>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <a class="text-dark" th:href="@{/shop/viewproduct/{id}(id=${item.product.id})}"><h5 th:text="${item.product.name}"></h5></a>
+                                                <p class="mb-2 text-uppercase small">Category: <span th:text="${item.product.category.name}"></span></p>
+
+                                            </div>
+                                        </div>
+                                        <div class="mt-5 d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <a href="#!" th:href="@{/removeFromWishlistAtWishlist/{id}(id=${item.product.id})}"  type="button" class="card-link-secondary small text-uppercase mr-3"><i
+                                                        class="fas fa-trash-alt mr-1"></i> Remove product from wishlist </a>
+                                            </div>
+                                            <p class="mb-0"><strong>₹<span th:text="${item.product.price}"></span></strong></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+                <!--Grid column-->
+
+            </div>
+            <!--Grid row-->
+
+        </section>
+        <!--Section: Block Content-->
+
+    </div>
+</main>
+<!--Main layout-->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

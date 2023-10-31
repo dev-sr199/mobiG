@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://java.sun.com/xml/ns/j2ee">
+<head>
+    <meta charset="UTF-8">
+    <title>mobiG</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .buntan {background-color:rgb(135, 16, 216); color:white;}
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" >
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img th:src="@{/images/logo.png}"  src="../static/images/logo.png" width="auto" height="40" class="d-inline-block align-top" alt=""/>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto"></ul>
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" th:href="@{/admin}" href="#">Panel</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" th:href="@{/logout}" href="#">Logout</a>
+        </li>
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <h1 class="text-center">Coupons</h1>
+
+  <div>
+    <p class="text-success text-center lead" th:text="${couponCreated}"></p>
+    <p class="text-danger text-center lead" th:text="${couponDeleted}"></p>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <a th:href="@{/admin/createCoupon}" class="btn buntan">Create a new coupon</a>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>Coupon ID</th>
+          <th>Coupon Code</th>
+          <th>Discount Type</th>
+          <th>Discount Value</th>
+          <th>Minimum Purchase Value</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="coupon : ${allCoupons}">
+          <td th:text="${coupon.couponId}"></td>
+          <td th:text="${coupon.couponCode}"></td>
+          <td th:text="${coupon.discountType}"></td>
+          <td th:text="${coupon.discountValue}"></td>
+          <td th:text="${coupon.minimumPurchase}"></td>
+          <td>
+            <a th:href="@{'/admin/coupons/edit/' + ${coupon.couponId}}" class="btn btn-warning">Edit</a>
+            <a th:href="@{'/admin/coupons/delete/' + ${coupon.couponId}}" class="btn btn-danger">Delete</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>mobiG</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.css" integrity="sha512-bs9fAcCAeaDfA4A+NiShWR886eClUcBtqhipoY5DM60Y1V3BbVQlabthUBal5bq8Z8nnxxiyb1wfGX2n76N1Mw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .buntan {background-color:rgb(135, 16, 216); color:white;}
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/images/logo.png}" src="../static/images/logo.png" width="auto" height="40"
+                 class="d-inline-block align-top" alt=""/>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto"></ul>
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/admin}" href="#">Panel</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/logout}" href="#">Logout</a>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <h3>Add a new Product</h3>
+
+
+    <form th:action="@{/admin/products/add}" method="post" th:object="${productDTO}" enctype="multipart/form-data">
+
+        <div class="row">
+
+            <div class="col-sm-5">
+
+                <input type="hidden" name="id" th:field="*{id}">
+
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" th:field="*{name}" name="name" id="name"
+                           placeholder="Enter name">
+                </div>
+                <div th:if="${#fields.hasErrors('name')}"
+                     style="margin-bottom: 25px" class="text-danger">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('name')}" th:text="${err}" />
+                    </ul>
+                </div>
+                <!-- Duplicate Name Check -->
+                <div class="form-group mt-2" th:if="${duplicateNameCheck}">
+                    <div class="col-xs-15">
+                        <div>
+                            <div th:if="${duplicateNameCheck}">
+                                <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+                                    <span th:text="${duplicateName}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Select Category</label>
+                    <select class="form-control" th:field="*{categoryId}" id="category" name="category">
+                        <option th:each="category :${categories}"
+                                th:value="${category.id}"
+                                th:text="${category.name}"
+                        >
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="number" step="any" class="form-control" th:field="*{price}" name="price" id="price"
+                           placeholder="Price">
+                </div>
+                <div th:if="${#fields.hasErrors('price')}"
+                     style="margin-bottom: 25px" class="text-danger">
+                    <ul>
+                        <li th:if="${err}=='Price cannot be negative'" th:each="err : ${#fields.errors('price')}" th:text="${err}"></li>
+                        <li th:if="${err}!='Price cannot be negative'" th:each="err : ${#fields.errors('price')}" th:text="'Price is required'"></li>
+                    </ul>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" class="form-control" th:field="*{quantity}" name="quantity" id="quantity"
+                           placeholder="Quantity">
+                </div>
+                <div th:if="${#fields.hasErrors('quantity')}"
+                     style="margin-bottom: 25px" class="text-danger">
+                    <ul>
+                        <li th:if="${err}=='Quantity cannot be negative'" th:each="err : ${#fields.errors('quantity')}" th:text="${err}"></li>
+                        <li th:if="${err}!='Quantity cannot be negative'" th:each="err : ${#fields.errors('quantity')}" th:text="'Quantity is required'"></li>
+
+                    </ul>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Product Description</label>
+                    <textarea class="form-control" rows="5" th:field="*{description}" name="description" id="description"></textarea>
+                </div>
+                <div th:if="${#fields.hasErrors('description')}"
+                     style="margin-bottom: 25px" class="text-danger">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('description')}" th:text="${err}" />
+                    </ul>
+                </div>
+
+            </div>
+
+
+            <div class="col-sm-5">
+
+                <p>Product Image</p>
+
+                <div class="custom-file">
+                    <input type="file" multiple class="custom-file-input" name="productImage" accept="image/jpeg, image/png"  id="productImage"/>
+                    <label class="custom-file-label" for="productImage">Choose file</label>
+                </div>
+
+                <!-- Image Required Check -->
+                <div class="form-group mt-2" th:if="${imageRequiredCheck}">
+                    <div class="col-xs-15">
+                        <div>
+                            <div th:if="${imageRequiredCheck}">
+                                <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+                                    <span th:text="${imageRequired}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="imagePreviews" class="mt-3"></div>
+
+                <button type="submit" class="btn buntan mt-3">Submit</button>
+
+            </div>
+
+        </div>
+    </form>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.js" integrity="sha512-Zt7blzhYHCLHjU0c+e4ldn5kGAbwLKTSOTERgqSNyTB50wWSI21z0q6bn/dEIuqf6HiFzKJ6cfj2osRhklb4Og==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script>
+    function readURL(input) {
+        if (input.files && input.files.length > 0) {
+            for (let i = 0; i < input.files.length; i++) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var imagePreview = $('<img>').attr('src', e.target.result).width(100).height(100);
+                    $('#imagePreviews').append(imagePreview);
+                }
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+    }
+
+    $('#productImage').change(function () {
+        $('#imagePreviews').empty(); // Clear previous previews
+        readURL(this);
+    });
+
+    $(".custom-file-input").on("change", function () {
+    var fileInput = $(this);
+    var fileNames = [];
+
+    // Loop through all selected files in the input
+    for (var i = 0; i < fileInput[0].files.length; i++) {
+        fileNames.push(fileInput[0].files[i].name);
+    }
+
+    // Update the label text with the list of selected file names
+    fileInput.siblings(".custom-file-label").addClass("selected").html(fileNames.join(", "));
+});
+</script>
+
+</body>
+</html>

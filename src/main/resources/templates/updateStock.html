@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://java.sun.com/xml/ns/j2ee">
+<head>
+    <meta charset="UTF-8">
+    <title>Add/Remove Stock - mobiG</title>
+    <!-- Include Bootstrap CSS link -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" >
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/images/logo.png}"  src="../static/images/logo.png" width="auto" height="40" class="d-inline-block align-top" alt=""/>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto"></ul>
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/admin}" href="#">Panel</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/logout}" href="#">Logout</a>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h1 class="text-center">Add/Remove Stock</h1>
+
+    <br>
+
+    <!-- Add Stock Form -->
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <a id="toggleButton1" class="btn btn-dark"><h2>Add Stock</h2></a>
+            <br> <br>
+            <div id="hide1" style="display : none;">
+                <form th:action="@{/admin/inventory/addStock/{id}(id=${product.id})}" method="post">
+                    <div class="form-group">
+                        <label for="addStock">Add Stock</label>
+                        <input id="addStock" name="addStock" type="number" class="form-control" placeholder="Enter quantity" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Stock</button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Remove Stock Form -->
+        <div class="col-md-6">
+
+            <a id="toggleButton2" class="btn btn-dark"><h2>Remove Stock</h2></a>
+            <br> <br>
+
+            <div id="hide2" style="display : none;">
+                <form th:action="@{/admin/inventory/removeStock/{id}(id=${product.id})}" method="post">
+                    <div class="form-group">
+                        <label for="removeStock">Remove Stock</label>
+                        <input id="removeStock" name="removeStock" type="number" class="form-control" placeholder="Enter quantity" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Remove Stock</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <br><br><br><br><br>
+
+    <div class="row">
+        <a th:href="@{/admin/inventory}" class="btn btn-outline-dark"><h5>Back to inventory</h5></a>
+    </div>
+</div>
+
+<!-- Include Bootstrap JS and jQuery scripts (for Bootstrap functionality) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    const toggleButton1 = document.getElementById('toggleButton1');
+const myDiv = document.getElementById('hide1');
+
+toggleButton1.addEventListener('click', ()=>{
+
+    if (myDiv.style.display == 'none') {
+
+        myDiv.style.display = 'block';
+    } else {
+
+        myDiv.style.display = 'none';
+
+    }
+
+});
+</script>
+<script>
+    const toggleButton2 = document.getElementById('toggleButton2');
+const myDiv2 = document.getElementById('hide2');
+
+toggleButton2.addEventListener('click', ()=>{
+
+    if (myDiv2.style.display == 'none') {
+
+        myDiv2.style.display = 'block';
+    } else {
+
+        myDiv2.style.display = 'none';
+
+    }
+
+});
+</script>
+</body>
+</html>

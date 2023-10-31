@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://java.sun.com/xml/ns/j2ee">
+<head>
+    <meta charset="UTF-8">
+    <title>mobiG</title>
+</head>
+<body>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script th:inline="javascript">
+
+    window.onload = function(e){
+    var options = {
+        "key": "key",
+        "amount": /*[[${amount}]]*/,
+        "currency": "INR",
+        "name": "mobiG",
+        "order_id": /*[[${orderId}]]*/,
+            "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000"
+        },
+        "callback_url": "/checkout/razorpay",
+        "notes": {
+        "address": /*[[${address}]]*/,
+        "paymentMethod" : /*[[${paymentMethod}]]*/
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+        rzp1.open();
+        e.preventDefault();
+    }
+</script>
+</body>
+</html>

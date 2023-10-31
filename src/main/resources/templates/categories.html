@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>mobiG</title>
+    <style>
+        .buntan {background-color:rgb(135, 16, 216); color:white;}
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" >
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/images/logo.png}"  src="../static/images/logo.png" width="auto" height="40" class="d-inline-block align-top" alt=""/>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto"></ul>
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/admin}" href="#">Panel</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/logout}" href="#">Logout</a>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <a th:href="@{/admin/categories/add}" style="margin: 20px 0" class="btn buntan">Add Category</a>
+
+    <a th:href="@{/admin/categories}" style="margin: 20px 0" class="btn buntan">All Categories</a>
+
+    <form th:action="@{/admin/categories}" method="post">
+        <div class="form-group">
+            <label for="name">Search</label>
+            <input type="text" class="form-control" name="name" id="name"  placeholder="Enter category" required>
+        </div>
+        <button type="submit" class="btn buntan">Search</button>
+    </form>
+
+    <br>
+
+    <!-- Place for messages: error, alert etc ... -->
+    <div class="form-group" th:if="${searchError}">
+        <div class="col-xs-15">
+            <div>
+
+                <!-- Check for login error -->
+
+                <div th:if="${searchError}">
+
+                    <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+                        <span th:text="${searchError}"></span>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Exception Check -->
+    <div class="form-group" th:if="${exceptionCheck}">
+        <div class="col-xs-15">
+            <div>
+                <div th:if="${exceptionCheck}">
+                    <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+                        <span th:text="${exception}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deleted Check -->
+    <div class="form-group" th:if="${deletedCheck}">
+        <div class="col-xs-15">
+            <div>
+                <div th:if="${deletedCheck}">
+                    <div class="alert alert-warning col-xs-offset-1 col-xs-10">
+                        <span th:text="${deleted}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <table class="table">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">SN</th>
+            <th scope="col">Category Name</th>
+            <th scope="col">Delete</th>
+            <th scope="col">Update</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="category, sn : ${categories}">
+            <th scope="row" th:text="${sn.index + 1}"></th>
+            <td th:text="${category.name}"></td>
+
+            <td>
+                <a href="" th:href="@{/admin/categories/delete/{id}(id=${category.id})}" class="btn btn-danger"
+                   onclick="if(!(confirm('Are you sure you want to delete this category?'))) return false"
+                >
+                    Delete
+                </a>
+            </td>
+            <td><a href="" th:href="@{/admin/categories/update/{id}(id=${category.id})}" class="btn btn-warning">Update</a></td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

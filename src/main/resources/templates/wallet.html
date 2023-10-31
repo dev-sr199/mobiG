@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet</title>
+    <!-- Link to Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Additional custom styles can be added here */
+        .wallet-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .wallet-button-container {
+            text-align: center;
+        }
+        .wallet-amount {
+            font-size: 2rem; /* Larger font size for amount */
+            font-weight: bold; /* Bold text for emphasis */
+        }
+        .buntan {background-color:rgb(135, 16, 216); color:white;}
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" >
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/images/logo.png}"  src="../static/images/logo.png" width="auto" height="40" class="d-inline-block align-top" alt=""/>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto"></ul>
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/}" href="#">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/shop}" href="#">Shop</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/profile}" href="#">Profile</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}" href="#">Login</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}" href="#">Logout</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/cart}" href="#">Cart</a>
+                </li>
+                <li class="nav-item active">
+                    <span class="nav-link" th:text="${cartCount}">0</span>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<div class="container wallet-container">
+    <h1 class="mt-4 mb-4">Wallet</h1>
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Wallet Details</h3>
+            <!-- Apply custom style to make the amount prominent -->
+            <p class="wallet-amount">Amount in Wallet: ₹<span th:text="${wallet.amount}"></span></p>
+            <div class="wallet-button-container">
+                <button class="btn buntan" id="toggleButton">Add Amount to Wallet</button>
+                <br><br>
+                <form id="hideThis" th:action="@{/addAmountToWallet}" method="post" style="display: none;">
+                    <div class="form-group">
+                        <input type="number" class="form-control" name="amount" min="1" placeholder="Enter amount">
+                    </div>
+                    <button type="submit" class="btn btn-success">Add Amount</button>
+                </form>
+            </div>
+            <br><br>
+            <div class="alert alert-success" th:if="${addedToWallet}" th:text="${addedToWallet}"></div>
+            <a class="btn btn-secondary" th:href="@{/profile}">Back to Profile</a>
+        </div>
+    </div>
+</div>
+<script>
+    const toggleButton = document.getElementById('toggleButton');
+    const myDiv = document.getElementById('hideThis');
+
+    toggleButton.addEventListener('click', () => {
+        if (myDiv.style.display === 'none' || myDiv.style.display === '') {
+            myDiv.style.display = 'block';
+        } else {
+            myDiv.style.display = 'none';
+        }
+    });
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

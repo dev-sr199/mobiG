@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>mobiG</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .buntan {background-color:rgb(135, 16, 216); color:white;}
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" >
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img th:src="@{/images/logo.png}"  src="../static/images/logo.png" width="auto" height="40" class="d-inline-block align-top" alt=""/>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto"></ul>
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" th:href="@{/admin}" href="#">Panel</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" th:href="@{/logout}" href="#">Logout</a>
+        </li>
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <h2 th:if="!${edit}" class="text-center">Create a new coupon</h2>
+  <h2 th:if="${edit}" class="text-center">Edit coupon</h2>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <form th:action="@{/admin/createCoupon}" method="post" th:object="${coupon}">
+        <input type="hidden" th:field="*{couponId}">
+        <input th:if="!${edit}" type="hidden" name="status" value="1">
+        <input th:if="${edit}" type="hidden" name="status" value="2">
+        <div class="form-group">
+          <label for="couponCode">Coupon Code:</label>
+          <input type="text" id="couponCode" th:field="*{couponCode}" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="discountType">Discount Type:</label>
+          <select id="discountType" th:field="*{discountType}" class="form-control">
+            <option value="PERCENTAGE">PERCENTAGE</option>
+            <option value="ABSOLUTE">ABSOLUTE</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="discountValue">Discount Value:</label>
+          <input type="number" min="1" step="any" id="discountValue" th:field="*{discountValue}" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="minimumPurchase">Minimum Purchase Value:</label>
+          <input type="number" min="0" step="any" id="minimumPurchase" th:field="*{minimumPurchase}" class="form-control" required>
+        </div>
+        <div class="form-group text-center">
+          <button th:if="!${edit}" type="submit" class="btn buntan">Create coupon</button>
+          <button th:if="${edit}" type="submit" class="btn buntan">Edit coupon</button>
+        </div>
+      </form>
+
+      <a th:href="@{/admin/coupons}" class="btn btn-secondary">Back to coupons</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

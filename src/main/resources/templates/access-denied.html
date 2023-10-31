@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://java.sun.com/xml/ns/j2ee" xmlns:sec="http://java.sun.com/xml/ns/j2ee">
+<head>
+    <meta charset="UTF-8">
+    <title>mobiG</title>
+    <!--    <link href="css/style.css" rel="stylesheet">-->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<!-- Start Header/Navigation -->
+<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
+
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">mobiG<span>.</span></a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni" aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsFurni">
+            <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/}">Home</a>
+                </li>
+                <li><a class="nav-link" th:href="@{/shop}">Shop</a></li>
+                <li><a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}">Login</a></li>
+                <li><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a></li>
+            </ul>
+
+            <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
+                <li><a class="nav-link" th:href="@{/profile}"><img src="mobi/user.svg"></a></li>
+                <li><a class="nav-link" th:href="@{/cart}"><img src="mobi/cart.svg"></a></li>
+            </ul>
+        </div>
+    </div>
+
+</nav>
+<!-- End Header/Navigation -->
+
+<br><br>
+
+<body>
+<div class="text-center">
+    <h1>The page you were looking for doesn't seem to exist.</h1>
+    <br>
+    <h2><a th:href="@{/}" class="btn btn-dark btn-lg">Go Home</a></h2>
+</div>
+
+</body>
+</html>

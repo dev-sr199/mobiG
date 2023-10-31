@@ -1,0 +1,13 @@
+cloud:
+  aws:
+    credentials:
+      access-key: ACCESS_KEY
+      secret-key: SECRET_KEY
+    region:
+      static: region
+    stack:
+      auto: false
+
+application:
+  bucket:
+    name: bucket_name

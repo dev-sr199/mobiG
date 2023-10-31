@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>mobiG</title>
+    <style>
+        .buntan {background-color:rgb(135, 16, 216); color:white;}
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" >
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/images/logo.png}"  src="../static/images/logo.png" width="auto" height="40" class="d-inline-block align-top" alt=""/>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto"></ul>
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/admin}" href="#">Panel</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/logout}" href="#">Logout</a>
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+
+    <h1 class="text-center">Inventory</h1>
+
+    <div th:if="${stockStatus}" class="text-center">
+        <h3 class="text-info" th:text="${stockStatus}"></h3>
+    </div>
+
+<!--    Row Start-->
+    <div class="row">
+
+<!--        Column 1 Start-->
+        <div class="col-2">
+            <a th:href="@{/admin/products/add}" style="margin: 20px 0" class="btn buntan">Add Product</a>
+
+            <a th:href="@{/admin/inventory}" style="margin: 20px 0" class="btn buntan">Show Whole Inventory</a>
+
+            <form th:action="@{/admin/inventory}" method="post">
+                <div class="form-group">
+                    <label for="name">Search inventory</label>
+                    <input type="text" class="form-control" name="name" id="name"  placeholder="Search inventory" required>
+                </div>
+                <button type="submit" class="btn buntan">Search</button>
+            </form>
+
+            <br>
+
+            <!-- Place for messages: error, alert etc ... -->
+            <div class="form-group" th:if="${searchError}">
+                <div class="col-xs-15">
+                    <div>
+
+                        <!-- Check for login error -->
+
+                        <div th:if="${searchError}">
+
+                            <div class="alert alert-danger col-xs-offset-1 col-xs-10">
+                                <span th:text="${searchError}"></span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <button id="toggleButton" class="btn buntan" style="margin-bottom : 10px;">Filter By Category</button>
+
+            <div id="hideThis" style="display :none;">
+                <h4>Categories</h4>
+                <ul class="list-group">
+                    <a href="" th:each="category, iStat : ${categories}"
+                       th:href="@{/admin/inventory/filter/{id}(id=${category.id})}"><li
+                            class="list-group-item" th:text="${category.name}"></li></a>
+                </ul>
+            </div>
+        </div>
+<!--        Column 1 End-->
+
+
+<!--        Column 2 Start-->
+        <div class="col">
+            <table class="table">
+
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">SN</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Preview</th>
+                    <th scope="col">Stock</th>
+                    <th scope="col">Add/Remove Stock</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="product, iStat : ${products}">
+                    <th scope="row" th:text="${iStat.index + 1}"></th>
+                    <td th:text="${product.name}" class="font-weight-bold" style="font-size : 20px;"></td>
+                    <td th:text="${product.category.name}"></td>
+                    <td>
+                        <img src="" height="150px" width="150px"
+                             th:src="${urlList.get(iStat.index)}"
+                             style="object-fit : contain;"
+                        >
+                    </td>
+                    <td th:text="${product.quantity}" class="font-weight-bold" style="font-size : 30px;"></td>
+                    <td><a href="" th:href="@{/admin/inventory/update/{id}(id=${product.id})}" class="btn btn-warning">Add/Remove Stock</a></td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+<!--        Column 2 End-->
+    </div>
+<!--    Row End-->
+
+</div>
+<script>
+    const toggleButton = document.getElementById('toggleButton');
+const myDiv = document.getElementById('hideThis');
+
+toggleButton.addEventListener('click', ()=>{
+
+    if (myDiv.style.display == 'none') {
+
+        myDiv.style.display = 'block';
+    } else {
+
+        myDiv.style.display = 'none';
+
+    }
+
+});
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>
